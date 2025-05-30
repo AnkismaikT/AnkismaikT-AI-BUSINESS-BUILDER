@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AnkismaikT Studio</title>
     
+    <!-- Base URL for GitHub Pages -->
+    <base href="/AnkismaikT-AI-BUSINESS-BUILDER/">
+    
     <!-- PWA Support -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#039BE5">
@@ -32,7 +35,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('./sw.js', { scope: '/AnkismaikT-AI-BUSINESS-BUILDER/' })
                     .then(registration => {
                         console.log('ServiceWorker registration successful');
                     })
