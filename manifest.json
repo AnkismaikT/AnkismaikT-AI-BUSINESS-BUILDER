@@ -2,7 +2,7 @@
     "name": "AnkismaikT Studio",
     "short_name": "AnkismaikT",
     "description": "AI-powered business and investment platform",
-    "start_url": "/",
+    "start_url": "/AnkismaikT-AI-BUSINESS-BUILDER/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#039BE5",
@@ -37,12 +37,12 @@
     "shortcuts": [
         {
             "name": "New Business Plan",
-            "url": "/#business",
+            "url": "/AnkismaikT-AI-BUSINESS-BUILDER/#business",
             "icons": [{ "src": "assets/logo.svg", "sizes": "32x32" }]
         },
         {
             "name": "Investment Portfolio",
-            "url": "/#investment",
+            "url": "/AnkismaikT-AI-BUSINESS-BUILDER/#investment",
             "icons": [{ "src": "assets/logo.svg", "sizes": "32x32" }]
         }
     ],

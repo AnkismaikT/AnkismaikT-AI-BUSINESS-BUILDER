@@ -25,15 +25,11 @@ jobs:
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
 
   deploy:
     needs: build
@@ -52,4 +48,4 @@ jobs:
       - name: Output deployment URL
         run: |
           echo "Deployed to: ${{ steps.deployment.outputs.page_url }}"
-          echo "Please wait a few minutes for the site to be accessible." 
+          echo "Please wait a few minutes for the site to be accessible."
