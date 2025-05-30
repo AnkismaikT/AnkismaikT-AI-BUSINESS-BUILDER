@@ -2,7 +2,7 @@
     "name": "AnkismaikT Studio",
     "short_name": "AnkismaikT",
     "description": "AI-powered business and investment platform",
-    "start_url": "/AnkismaikT-AI-BUSINESS-BUILDER/",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#039BE5",
@@ -27,11 +27,22 @@
     "categories": ["business", "finance", "productivity"],
     "screenshots": [
         {
-            "src": "assets/screenshot1.png",
+            "src": "assets/screenshots/dashboard.png",
             "sizes": "1280x720",
             "type": "image/png",
-            "platform": "wide",
-            "label": "Dashboard View"
+            "label": "Dashboard"
+        },
+        {
+            "src": "assets/screenshots/business.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "label": "Business Builder"
+        },
+        {
+            "src": "assets/screenshots/investment.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "label": "Investment Portfolio"
         }
     ],
     "shortcuts": [
