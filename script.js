@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeCharts();
     setupTemplateInteractions();
+    setupModuleButtons();
 });
 
 // Set up event listeners
@@ -23,6 +24,68 @@ function setupEventListeners() {
             document.querySelector(this.getAttribute('href')).scrollIntoView({
                 behavior: 'smooth'
             });
+        });
+    });
+}
+
+// Set up module buttons
+function setupModuleButtons() {
+    // Investment button
+    const investmentButton = document.querySelector('a[href="#investment"]');
+    if (investmentButton) {
+        investmentButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('businessBuilderSection').style.display = 'none';
+            document.getElementById('wealthBuilderSection').style.display = 'block';
+            document.getElementById('tradingBotSection').style.display = 'none';
+            startWealthPlan();
+        });
+    }
+
+    // Trading button
+    const tradingButton = document.querySelector('a[href="#trading"]');
+    if (tradingButton) {
+        tradingButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('businessBuilderSection').style.display = 'none';
+            document.getElementById('wealthBuilderSection').style.display = 'none';
+            document.getElementById('tradingBotSection').style.display = 'block';
+            createTradingBot();
+        });
+    }
+
+    // Business Builder button
+    const businessButton = document.querySelector('a[href="#business"]');
+    if (businessButton) {
+        businessButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('businessBuilderSection').style.display = 'block';
+            document.getElementById('wealthBuilderSection').style.display = 'none';
+            document.getElementById('tradingBotSection').style.display = 'none';
+            startNewBusiness();
+        });
+    }
+
+    // Template buttons
+    document.querySelectorAll('.template-card .btn-primary').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const templateType = e.target.closest('.template-card').querySelector('h3').textContent;
+            selectTemplate(templateType);
+        });
+    });
+
+    // Chart action buttons
+    document.querySelectorAll('.chart-actions .btn-action').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const action = button.getAttribute('title');
+            const chartId = button.closest('.chart-card').querySelector('canvas').id;
+            
+            if (action.includes('Download')) {
+                downloadChart(chartId);
+            } else if (action.includes('Refresh')) {
+                refreshChart(chartId);
+            }
         });
     });
 }
@@ -1154,44 +1217,36 @@ function previousStep() {
 
 // Wealth Builder Functions
 function startWealthPlan() {
-    document.getElementById('businessBuilderSection').style.display = 'none';
+    // Show the wealth builder section
     document.getElementById('wealthBuilderSection').style.display = 'block';
-    document.getElementById('tradingBotSection').style.display = 'none';
-    initializeWealthBuilder();
-}
-
-function initializeWealthBuilder() {
+    
+    // Initialize the risk slider
     const riskSlider = document.getElementById('riskSlider');
-    const portfolioChart = document.getElementById('portfolioAllocationChart');
+    if (riskSlider) {
+        riskSlider.value = 5; // Set default value
+        updatePortfolioAllocation();
+    }
 
-    riskSlider.addEventListener('input', updatePortfolioAllocation);
-    document.querySelectorAll('.goal-option input').forEach(checkbox => {
+    // Initialize goal checkboxes
+    document.querySelectorAll('.goal-option input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', updatePortfolioAllocation);
     });
 
-    updatePortfolioAllocation();
+    // Create initial portfolio chart
+    createPortfolioChart();
 }
 
-function updatePortfolioAllocation() {
-    const riskLevel = parseInt(document.getElementById('riskSlider').value);
-    const allocation = calculatePortfolioAllocation(riskLevel);
-    updateAllocationChart(allocation);
-}
+function createPortfolioChart() {
+    const ctx = document.getElementById('portfolioAllocationChart');
+    if (!ctx) return;
 
-function calculatePortfolioAllocation(riskLevel) {
-    // This would be replaced with actual portfolio optimization logic
-    const allocations = {
-        stocks: 40 + (riskLevel * 5),
-        bonds: 60 - (riskLevel * 4),
-        cash: 20 - (riskLevel * 1),
-        alternatives: riskLevel * 2
+    const defaultAllocation = {
+        stocks: 40,
+        bonds: 30,
+        cash: 20,
+        alternatives: 10
     };
 
-    return allocations;
-}
-
-function updateAllocationChart(allocation) {
-    const ctx = document.getElementById('portfolioAllocationChart').getContext('2d');
     if (window.portfolioChart) {
         window.portfolioChart.destroy();
     }
@@ -1199,39 +1254,160 @@ function updateAllocationChart(allocation) {
     window.portfolioChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: Object.keys(allocation),
+            labels: ['Stocks', 'Bonds', 'Cash', 'Alternatives'],
             datasets: [{
-                data: Object.values(allocation),
-                backgroundColor: chartColors.primary
+                data: Object.values(defaultAllocation),
+                backgroundColor: [
+                    '#039BE5',  // Blue for stocks
+                    '#FFA000',  // Yellow for bonds
+                    '#0F9D58',  // Green for cash
+                    '#721CE0'   // Purple for alternatives
+                ]
             }]
         },
-        options: chartTemplates.portfolioDistribution.options
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
     });
 }
 
-// Trading Bot Functions
-let selectedStrategy = null;
+function updatePortfolioAllocation() {
+    const riskLevel = parseInt(document.getElementById('riskSlider').value);
+    const goals = Array.from(document.querySelectorAll('.goal-option input[type="checkbox"]:checked'))
+        .map(checkbox => checkbox.value);
 
-function createTradingBot() {
-    document.getElementById('businessBuilderSection').style.display = 'none';
-    document.getElementById('wealthBuilderSection').style.display = 'none';
-    document.getElementById('tradingBotSection').style.display = 'block';
-    initializeTradingBot();
+    // Calculate allocation based on risk and goals
+    const allocation = calculateAllocation(riskLevel, goals);
+
+    // Update the chart
+    if (window.portfolioChart) {
+        window.portfolioChart.data.datasets[0].data = Object.values(allocation);
+        window.portfolioChart.update();
+    }
 }
 
-function initializeTradingBot() {
+function calculateAllocation(riskLevel, goals) {
+    // Base allocation percentages
+    let stocks = 40 + (riskLevel * 4);  // 40-80%
+    let bonds = 40 - (riskLevel * 3);   // 40-10%
+    let cash = 15 - (riskLevel * 1);    // 15-5%
+    let alternatives = 5 + (riskLevel * 1); // 5-15%
+
+    // Adjust based on goals
+    if (goals.includes('retirement')) {
+        bonds += 5;
+        stocks -= 5;
+    }
+    if (goals.includes('passive_income')) {
+        bonds += 10;
+        stocks -= 10;
+    }
+    if (goals.includes('growth')) {
+        stocks += 10;
+        bonds -= 10;
+    }
+
+    // Ensure no negative values and total = 100%
+    stocks = Math.max(0, Math.min(80, stocks));
+    bonds = Math.max(0, Math.min(60, bonds));
+    cash = Math.max(5, Math.min(30, cash));
+    alternatives = Math.max(0, Math.min(20, alternatives));
+
+    // Normalize to ensure total is 100%
+    const total = stocks + bonds + cash + alternatives;
+    const factor = 100 / total;
+
+    return {
+        stocks: Math.round(stocks * factor),
+        bonds: Math.round(bonds * factor),
+        cash: Math.round(cash * factor),
+        alternatives: Math.round(alternatives * factor)
+    };
+}
+
+// Trading Bot Functions
+function createTradingBot() {
+    // Show trading bot section
+    document.getElementById('tradingBotSection').style.display = 'block';
+    
     // Set default values
     document.getElementById('tradingCapital').value = '10000';
     document.getElementById('riskPerTrade').value = '1';
     document.getElementById('stopLoss').value = '2';
+
+    // Add event listeners to strategy cards
+    document.querySelectorAll('.strategy-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove selected class from all cards
+            document.querySelectorAll('.strategy-card').forEach(c => 
+                c.classList.remove('selected'));
+            // Add selected class to clicked card
+            this.classList.add('selected');
+            // Store selected strategy
+            selectedStrategy = this.querySelector('h4').textContent;
+        });
+    });
+
+    // Add event listener to Find Best Stocks button
+    const findStocksButton = document.querySelector('.stock-selector .btn-primary');
+    if (findStocksButton) {
+        findStocksButton.addEventListener('click', findStocks);
+    }
+
+    // Initialize trading chart
+    createTradingChart();
 }
 
-function selectStrategy(strategy) {
-    selectedStrategy = strategy;
-    document.querySelectorAll('.strategy-card').forEach(card => {
-        card.classList.remove('selected');
+function createTradingChart() {
+    const ctx = document.getElementById('tradingChart');
+    if (!ctx) return;
+
+    const mockData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        returns: [5, -2, 7, 3, -1, 8]
+    };
+
+    if (window.tradingChart) {
+        window.tradingChart.destroy();
+    }
+
+    window.tradingChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: mockData.labels,
+            datasets: [{
+                label: 'Trading Returns (%)',
+                data: mockData.returns,
+                borderColor: '#039BE5',
+                backgroundColor: 'rgba(3, 155, 229, 0.1)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Returns (%)'
+                    }
+                }
+            }
+        }
     });
-    event.currentTarget.classList.add('selected');
 }
 
 function findStocks() {
@@ -1250,7 +1426,7 @@ function findStocks() {
     setTimeout(() => {
         const recommendations = getStockRecommendations(selectedStrategy, marketCap, sector);
         displayStockRecommendations(recommendations);
-    }, 2000);
+    }, 1500);
 }
 
 function getStockRecommendations(strategy, marketCap, sector) {
@@ -1290,7 +1466,7 @@ function displayStockRecommendations(recommendations) {
             <div class="stock-signals">
                 ${stock.signals.map(signal => `<span class="signal">${signal}</span>`).join('')}
             </div>
-            <button class="btn btn-primary btn-sm" onclick="addToPortfolio('${stock.symbol}')">
+            <button class="btn btn-primary btn-sm add-stock" data-symbol="${stock.symbol}">
                 Add to Portfolio
             </button>
         `;
@@ -1304,9 +1480,53 @@ function displayStockRecommendations(recommendations) {
         existingList.remove();
     }
     stockSelector.appendChild(stockList);
+
+    // Add event listeners to new Add to Portfolio buttons
+    stockList.querySelectorAll('.add-stock').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const symbol = e.target.dataset.symbol;
+            addToPortfolio(symbol);
+        });
+    });
 }
 
 function addToPortfolio(symbol) {
     // This would be replaced with actual portfolio management logic
     showToast('success', 'Stock Added', `${symbol} has been added to your portfolio`);
-} 
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Chart controls
+    const refreshAllButton = document.querySelector('.btn-outline-primary');
+    if (refreshAllButton) {
+        refreshAllButton.addEventListener('click', refreshAllCharts);
+    }
+
+    const downloadReportButton = document.querySelector('.btn-primary');
+    if (downloadReportButton) {
+        downloadReportButton.addEventListener('click', downloadChartReports);
+    }
+
+    // Add event listeners for individual chart actions
+    document.querySelectorAll('.chart-actions .btn-action').forEach(button => {
+        const action = button.getAttribute('title').toLowerCase();
+        const chartId = button.closest('.chart-card').querySelector('canvas').id;
+        
+        if (action.includes('download')) {
+            button.addEventListener('click', () => downloadChart(chartId));
+        } else if (action.includes('refresh')) {
+            button.addEventListener('click', () => refreshChart(chartId));
+        }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.querySelector('.studio-sidebar');
+    
+    if (mobileMenuToggle && sidebar) {
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    }
+}); 
