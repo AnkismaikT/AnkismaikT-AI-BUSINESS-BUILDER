@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnkismaikT Studio</title>
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#039BE5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/logo192.png">
+    
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="charts.js"></script>
+    <script src="script.js"></script>
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="studio-container">
+        <!-- Sidebar -->
+        <nav class="studio-sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo.svg" alt="AnkismaikT Logo" class="sidebar-logo">
+                <span class="project-name">AnkismaikT Studio</span>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <div class="menu-header">Project Overview</div>
+                    <a href="#dashboard" class="menu-item active">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                    <a href="#analytics" class="menu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics
+                    </a>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-header">Build</div>
+                    <a href="#business" class="menu-item">
+                        <i class="fas fa-rocket"></i>
+                        Business Builder
+                        <span class="badge bg-success">New</span>
+                    </a>
+                    <a href="#investment" class="menu-item">
+                        <i class="fas fa-chart-line"></i>
+                        Investment
+                    </a>
+                    <a href="#trading" class="menu-item">
+                        <i class="fas fa-robot"></i>
+                        Trading
+                    </a>
+                </div>
+                <div class="menu-section">
+                    <div class="menu-header">Analyze</div>
+                    <a href="#market" class="menu-item">
+                        <i class="fas fa-globe"></i>
+                        Market Research
+                    </a>
+                    <a href="#performance" class="menu-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Performance
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="studio-main">
+            <!-- Top Navigation -->
+            <header class="studio-header">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" title="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search across projects...">
+                </div>
+                <div class="header-actions">
+                    <button class="btn-action" title="Documentation">
+                        <i class="fas fa-book"></i>
+                    </button>
+                    <button class="btn-action" title="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="user-profile">
+                        <img src="assets/avatar.svg" alt="User Profile" class="avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-container">
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-business-time"></i></div>
+                        <div class="stat-info">
+                            <h3>Business Projects</h3>
+                            <p class="stat-value">12</p>
+                            <span class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> 23%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+                        <div class="stat-info">
+                            <h3>Investment Portfolio</h3>
+                            <p class="stat-value">$245K</p>
+                            <span class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> 15%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Active Trades</h3>
+                            <p class="stat-value">8</p>
+                            <span class="stat-trend neutral">
+                                <i class="fas fa-minus"></i> 0%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Monthly Growth</h3>
+                            <p class="stat-value">+15.4%</p>
+                            <span class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> 5%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Analytics Overview</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-outline-primary" onclick="refreshAllCharts()">
+                                <i class="fas fa-sync-alt"></i> Refresh All
+                            </button>
+                            <button class="btn btn-primary" onclick="downloadChartReports()">
+                                <i class="fas fa-download"></i> Download Report
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart Grid -->
+                    <div class="chart-grid">
+                        <!-- Business Performance Chart -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Business Performance</h3>
+                                <div class="chart-actions">
+                                    <button class="btn-action" title="Download Chart" onclick="downloadChart('businessChart')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-action" title="Refresh Data" onclick="refreshChart('businessChart')">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="businessChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio Distribution Chart -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Portfolio Distribution</h3>
+                                <div class="chart-actions">
+                                    <button class="btn-action" title="Download Chart" onclick="downloadChart('portfolioChart')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-action" title="Refresh Data" onclick="refreshChart('portfolioChart')">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="portfolioChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Trading Performance Chart -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Trading Performance</h3>
+                                <div class="chart-actions">
+                                    <button class="btn-action" title="Download Chart" onclick="downloadChart('tradingChart')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-action" title="Refresh Data" onclick="refreshChart('tradingChart')">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="tradingChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Market Analysis Chart -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Market Analysis</h3>
+                                <div class="chart-actions">
+                                    <button class="btn-action" title="Download Chart" onclick="downloadChart('marketChart')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-action" title="Refresh Data" onclick="refreshChart('marketChart')">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="marketChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Templates Section -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Business Templates</h2>
+                        <button class="btn btn-primary">View All Templates</button>
+                    </div>
+                    <div class="template-grid">
+                        <div class="template-card premium">
+                            <div class="template-icon">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <h3>E-commerce Store</h3>
+                            <p>Launch your online store with our proven template</p>
+                            <div class="template-features">
+                                <span class="feature"><i class="fas fa-check"></i> Product Management</span>
+                                <span class="feature"><i class="fas fa-check"></i> Payment Integration</span>
+                                <span class="feature"><i class="fas fa-check"></i> Marketing Tools</span>
+                            </div>
+                            <button class="btn btn-primary">Use Template</button>
+                            <span class="template-badge premium">Premium</span>
+                        </div>
+
+                        <div class="template-card">
+                            <div class="template-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3>Mobile App MVP</h3>
+                            <p>Create your app MVP in minutes</p>
+                            <div class="template-features">
+                                <span class="feature"><i class="fas fa-check"></i> User Authentication</span>
+                                <span class="feature"><i class="fas fa-check"></i> Basic Features</span>
+                                <span class="feature"><i class="fas fa-check"></i> Analytics</span>
+                            </div>
+                            <button class="btn btn-primary">Use Template</button>
+                            <span class="template-badge new">New</span>
+                        </div>
+
+                        <div class="template-card">
+                            <div class="template-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3>AI Service</h3>
+                            <p>Build an AI-powered service business</p>
+                            <div class="template-features">
+                                <span class="feature"><i class="fas fa-check"></i> API Integration</span>
+                                <span class="feature"><i class="fas fa-check"></i> Model Training</span>
+                                <span class="feature"><i class="fas fa-check"></i> Scalable Infrastructure</span>
+                            </div>
+                            <button class="btn btn-primary">Use Template</button>
+                            <span class="template-badge hot">Hot</span>
+                        </div>
+
+                        <div class="template-card">
+                            <div class="template-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>Trading Bot</h3>
+                            <p>Automated trading system template</p>
+                            <div class="template-features">
+                                <span class="feature"><i class="fas fa-check"></i> Strategy Builder</span>
+                                <span class="feature"><i class="fas fa-check"></i> Risk Management</span>
+                                <span class="feature"><i class="fas fa-check"></i> Performance Analytics</span>
+                            </div>
+                            <button class="btn btn-primary">Use Template</button>
+                            <span class="template-badge trending">Trending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                        <button class="btn btn-primary">View All</button>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon"><i class="fas fa-rocket"></i></div>
+                            <div class="activity-details">
+                                <h4>New Business Plan Created</h4>
+                                <p>Tech Startup - AI Solutions</p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="btn-action" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-action" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="activity-details">
+                                <h4>Investment Strategy Updated</h4>
+                                <p>Portfolio Rebalancing</p>
+                                <span class="activity-time">5 hours ago</span>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="btn-action" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon"><i class="fas fa-robot"></i></div>
+                            <div class="activity-details">
+                                <h4>Trading Bot Activated</h4>
+                                <p>Swing Trading Strategy</p>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="btn-action" title="Settings">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Cards -->
+                <div class="content-section">
+                    <div class="section-header">
+                        <h2>Active Projects</h2>
+                        <button class="btn btn-primary" onclick="startNewProject()">New Project</button>
+                    </div>
+                    <div class="project-grid">
+                        <div class="project-card">
+                            <div class="project-header">
+                                <h3>Tech Startup</h3>
+                                <span class="project-status active">Active</span>
+                            </div>
+                            <p>AI-powered business solutions</p>
+                            <div class="project-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Progress</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Tasks</span>
+                                    <p>15/20 completed</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm" onclick="openProject('tech-startup')">Open Project</button>
+                        </div>
+                        <!-- Add more project cards as needed -->
+                    </div>
+                </div>
+
+                <!-- Business Builder Section -->
+                <div class="content-section" id="businessBuilderSection" style="display: none;">
+                    <div class="section-header">
+                        <h2>Business Builder</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" onclick="startNewBusiness()">
+                                <i class="fas fa-plus"></i> Start New Business
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Business Ideation -->
+                    <div class="ideation-section">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="businessIdeaInput" 
+                                placeholder="Describe your business idea or get AI suggestions...">
+                            <button class="btn btn-primary" onclick="generateBusinessIdeas()">
+                                <i class="fas fa-robot"></i> Get AI Suggestions
+                            </button>
+                        </div>
+
+                        <!-- AI Suggestions Grid -->
+                        <div class="suggestions-grid" id="aiSuggestions">
+                            <!-- Suggestion cards will be dynamically added here -->
+                        </div>
+                    </div>
+
+                    <!-- MVP Builder Steps -->
+                    <div class="mvp-builder" id="mvpBuilder" style="display: none;">
+                        <div class="mvp-progress">
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div class="step-indicators">
+                                <span class="step active">Ideation</span>
+                                <span class="step">Market Research</span>
+                                <span class="step">Features</span>
+                                <span class="step">Tech Stack</span>
+                                <span class="step">Launch Plan</span>
+                            </div>
+                        </div>
+
+                        <div class="mvp-steps">
+                            <!-- Step 1: Ideation -->
+                            <div class="step-content" id="step-ideation">
+                                <h3>Define Your MVP</h3>
+                                <div class="form-group">
+                                    <label>Business Name</label>
+                                    <input type="text" class="form-control" id="businessName">
+                                </div>
+                                <div class="form-group">
+                                    <label>Target Market</label>
+                                    <input type="text" class="form-control" id="targetMarket">
+                                </div>
+                                <div class="form-group">
+                                    <label>Core Problem</label>
+                                    <textarea class="form-control" id="coreProblem"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Market Research -->
+                            <div class="step-content" id="step-market">
+                                <h3>Market Analysis</h3>
+                                <div class="market-analysis">
+                                    <div class="competitor-analysis">
+                                        <h4>Competitor Analysis</h4>
+                                        <div id="competitorList"></div>
+                                        <button class="btn btn-outline-primary" onclick="analyzeMarket()">
+                                            Analyze Market
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Features -->
+                            <div class="step-content" id="step-features">
+                                <h3>Core Features</h3>
+                                <div class="feature-list" id="featureList">
+                                    <!-- Feature items will be added here -->
+                                </div>
+                                <button class="btn btn-outline-primary" onclick="addFeature()">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </button>
+                            </div>
+
+                            <!-- Step 4: Tech Stack -->
+                            <div class="step-content" id="step-tech">
+                                <h3>Technology Stack</h3>
+                                <div class="tech-recommendations" id="techStack">
+                                    <!-- Tech stack recommendations will be added here -->
+                                </div>
+                            </div>
+
+                            <!-- Step 5: Launch Plan -->
+                            <div class="step-content" id="step-launch">
+                                <h3>Launch Strategy</h3>
+                                <div class="launch-checklist" id="launchChecklist">
+                                    <!-- Launch checklist items will be added here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-navigation">
+                            <button class="btn btn-secondary" onclick="previousStep()">Previous</button>
+                            <button class="btn btn-primary" onclick="nextStep()">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wealth Builder Section -->
+                <div class="content-section" id="wealthBuilderSection" style="display: none;">
+                    <div class="section-header">
+                        <h2>Wealth Builder</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" onclick="startWealthPlan()">
+                                <i class="fas fa-chart-line"></i> Create Wealth Plan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Investment Strategy Builder -->
+                    <div class="wealth-builder">
+                        <div class="strategy-options">
+                            <div class="risk-profile">
+                                <h3>Risk Profile</h3>
+                                <div class="risk-slider">
+                                    <input type="range" min="1" max="10" value="5" id="riskSlider">
+                                    <div class="risk-labels">
+                                        <span>Conservative</span>
+                                        <span>Moderate</span>
+                                        <span>Aggressive</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="investment-goals">
+                                <h3>Investment Goals</h3>
+                                <div class="goal-options">
+                                    <label class="goal-option">
+                                        <input type="checkbox" value="retirement"> Retirement
+                                    </label>
+                                    <label class="goal-option">
+                                        <input type="checkbox" value="passive_income"> Passive Income
+                                    </label>
+                                    <label class="goal-option">
+                                        <input type="checkbox" value="growth"> Capital Growth
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portfolio-builder">
+                            <h3>Portfolio Allocation</h3>
+                            <div class="allocation-chart">
+                                <canvas id="portfolioAllocationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trading Bot Section -->
+                <div class="content-section" id="tradingBotSection" style="display: none;">
+                    <div class="section-header">
+                        <h2>Trading Bot</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" onclick="createTradingBot()">
+                                <i class="fas fa-robot"></i> Create Trading Bot
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trading Strategy Builder -->
+                    <div class="trading-builder">
+                        <div class="strategy-selector">
+                            <h3>Trading Strategy</h3>
+                            <div class="strategy-options">
+                                <div class="strategy-card" onclick="selectStrategy('momentum')">
+                                    <h4>Momentum Trading</h4>
+                                    <p>Trade based on price momentum and volume</p>
+                                </div>
+                                <div class="strategy-card" onclick="selectStrategy('mean_reversion')">
+                                    <h4>Mean Reversion</h4>
+                                    <p>Trade based on price deviation from mean</p>
+                                </div>
+                                <div class="strategy-card" onclick="selectStrategy('trend_following')">
+                                    <h4>Trend Following</h4>
+                                    <p>Trade following established trends</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bot-configuration">
+                            <h3>Bot Configuration</h3>
+                            <div class="config-options">
+                                <div class="form-group">
+                                    <label>Trading Capital</label>
+                                    <input type="number" class="form-control" id="tradingCapital">
+                                </div>
+                                <div class="form-group">
+                                    <label>Risk Per Trade (%)</label>
+                                    <input type="number" class="form-control" id="riskPerTrade" max="5">
+                                </div>
+                                <div class="form-group">
+                                    <label>Stop Loss (%)</label>
+                                    <input type="number" class="form-control" id="stopLoss">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stock-selector">
+                            <h3>Stock Selection</h3>
+                            <div class="stock-filters">
+                                <div class="form-group">
+                                    <label>Market Cap</label>
+                                    <select class="form-control" id="marketCap">
+                                        <option>Large Cap</option>
+                                        <option>Mid Cap</option>
+                                        <option>Small Cap</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sector</label>
+                                    <select class="form-control" id="sector">
+                                        <option>Technology</option>
+                                        <option>Healthcare</option>
+                                        <option>Finance</option>
+                                        <option>Consumer</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="findStocks()">
+                                Find Best Stocks
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation Bar -->
+        <nav class="mobile-app-bar">
+            <a href="#dashboard" class="mobile-nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#business" class="mobile-nav-item">
+                <i class="fas fa-rocket"></i>
+                <span>Business</span>
+            </a>
+            <a href="#investment" class="mobile-nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Invest</span>
+            </a>
+            <a href="#trading" class="mobile-nav-item">
+                <i class="fas fa-robot"></i>
+                <span>Trade</span>
+            </a>
+        </nav>
+
+        <!-- Floating Action Button -->
+        <button class="fab" onclick="startNewProject()" title="Create New Project">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast success" id="successToast">
+        <i class="fas fa-check-circle"></i>
+        <div class="toast-content">
+            <h4>Success</h4>
+            <p>Operation completed successfully</p>
+        </div>
+    </div>
+
+    <!-- New Project Modal -->
+    <div class="modal fade" id="newProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="project-templates">
+                        <div class="template-card" onclick="selectTemplate('business')">
+                            <i class="fas fa-rocket template-icon"></i>
+                            <h3>Business Plan</h3>
+                            <p>Create a comprehensive business plan</p>
+                            <span class="template-badge">Popular</span>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('investment')">
+                            <i class="fas fa-chart-line template-icon"></i>
+                            <h3>Investment Portfolio</h3>
+                            <p>Start a new investment strategy</p>
+                        </div>
+                        <div class="template-card" onclick="selectTemplate('trading')">
+                            <i class="fas fa-robot template-icon"></i>
+                            <h3>Trading Bot</h3>
+                            <p>Set up automated trading</p>
+                            <span class="template-badge">Beta</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
