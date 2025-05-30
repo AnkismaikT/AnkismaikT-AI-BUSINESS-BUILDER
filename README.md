@@ -29,12 +29,12 @@ An AI-powered platform for business building, wealth management, and automated t
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ankismaikt-ai-business-builder.git
+git clone https://github.com/AnkismaikT/AnkismaikT-AI-BUSINESS-BUILDER.git
 ```
 
 2. Open the project directory:
 ```bash
-cd ankismaikt-ai-business-builder
+cd AnkismaikT-AI-BUSINESS-BUILDER
 ```
 
 3. Start a local server:
@@ -53,7 +53,7 @@ The application is deployed using GitHub Pages. To deploy updates:
 
 1. Push changes to the main branch
 2. GitHub Actions will automatically build and deploy the application
-3. Visit the live site at: [your-github-username].github.io/ankismaikt-ai-business-builder
+3. Visit the live site at: ankismaikt.github.io/AnkismaikT-AI-BUSINESS-BUILDER
 
 ## Technologies Used
 
@@ -86,4 +86,4 @@ This application provides general business and investment guidance. Always consu
 
 ---
 
-Built with ❤️ by AnkismaikT Team 
+Built with ❤️ by AnkismaikT Team
